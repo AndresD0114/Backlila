@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Mostrar rama
-        run: echo "Rama actual: ${{ github.ref }}"
+        run: echo 'Rama actual: ${{ github.ref }}'
 
       - name: Deploy
         run: echo "Desplegando a PRODUCCION..."
