@@ -1,0 +1,23 @@
+name: Deploy Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Mostrar rama
+        run: |
+          echo "Rama actual: ${{ github.ref }}"
+
+      - name: Deploy
+        run: |
+          echo "Desplegando a PRODUCCION..."
