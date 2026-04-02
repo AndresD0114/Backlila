@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - test
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Simular build
+        run: echo "Compilando proyecto..."
+
+      - name: Simular tests
+        run: echo "Ejecutando pruebas..."
