@@ -1,6 +1,16 @@
 
 // clase que define
-
+class Usuario {
+  constructor({
+    id_usuario = null, // GUID (lo genera la BD)
+    telefono,
+    sexo_biologico = null,
+    orientacion_genero = null,
+    correo_email = null,
+    tipo_usuario,
+    estado = true,
+    fecha_registro
+  }) {
 
     // validación opcional
     if (correo_email && typeof correo_email !== "string") {
