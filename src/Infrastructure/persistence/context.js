@@ -1,6 +1,7 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const config = require("../../appsettings.json");
 
+
 // Crear conexión (equivalente a DbContext)
 const sequelize = new Sequelize(
   config.database.database,
