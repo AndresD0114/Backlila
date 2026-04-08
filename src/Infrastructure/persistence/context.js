@@ -54,6 +54,25 @@ const Usuario = sequelize.define("Usuario", {
   timestamps: false
 });
 
+//=======================
+// TIPO ACOSO
+//=======================
+
+
+const TipoAcoso = sequelize.define("TipoAcoso", {
+  id_tipo_acoso: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  descripcion: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  }
+}, {
+  tableName: "tipo_acoso",
+  timestamps: false
+});
 
 // =======================
 // EXPORTAR (DbContext)
@@ -61,5 +80,6 @@ const Usuario = sequelize.define("Usuario", {
 
 module.exports = {
   sequelize,
-  Usuario
+  Usuario,
+  TipoAcoso
 };
