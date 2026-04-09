@@ -1,21 +1,25 @@
-// Este archivo define la inicialización principal de Swagger.
-// Si la API crece mucho, luego se puede separar la configuración de Swagger
-// del arranque del servidor.
-
 const express = require("express");
 const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJSDoc = require("swagger-jsdoc");
 
 const { sequelize } = require("./Infrastructure/persistence/context");
+
+// Repositories
 const UsuarioRepository = require("./Infrastructure/Repository/UsuarioRepository");
+const TipoAcosoRepository = require("./Infrastructure/Repository/TipoAcosoRepository");
 
-// Application
+// Services
 const UsuarioService = require("./Aplication/Services/UsuarioService");
+const TipoAcosoService = require("./Aplication/Services/TipoAcosoService");
 
-// Presentation
+// Controllers
 const UsuarioController = require("./Presentation/Controllers/UsuarioController");
+const TipoAcosoController = require("./Presentation/Controllers/TipoAcosoController");
+
+// Routes
 const UsuarioRoutes = require("./Presentation/Routes/UsuarioRoutes");
+const TipoAcosoRoutes = require("./Presentation/Routes/TipoAcosoRoutes");
 
 const app = express();
 
@@ -27,8 +31,13 @@ const usuarioRepository = new UsuarioRepository();
 const usuarioService = new UsuarioService(usuarioRepository);
 const usuarioController = new UsuarioController(usuarioService);
 
-// Montar rutas
+const tipoAcosoRepository = new TipoAcosoRepository();
+const tipoAcosoService = new TipoAcosoService(tipoAcosoRepository);
+const tipoAcosoController = new TipoAcosoController(tipoAcosoService);
+
+// Rutas
 app.use("/api", UsuarioRoutes(usuarioController));
+app.use("/api", TipoAcosoRoutes(tipoAcosoController));
 
 // Swagger
 const swaggerOptions = {
@@ -58,13 +67,18 @@ app.get("/", (req, res) => {
 
 const PORT = 3000;
 
-app.listen(PORT, async () => {
+async function iniciarServidor() {
   try {
     await sequelize.authenticate();
     console.log("Base de datos conectada");
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
-    console.log(`Swagger en http://localhost:${PORT}/api-docs`);
+
+    app.listen(PORT, () => {
+      console.log(`Servidor corriendo en http://localhost:${PORT}`);
+      console.log(`Swagger en http://localhost:${PORT}/api-docs`);
+    });
   } catch (error) {
     console.error("Error al conectar la base de datos:", error.message);
   }
-});
+}
+
+iniciarServidor();
