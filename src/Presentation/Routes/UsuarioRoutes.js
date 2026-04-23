@@ -23,15 +23,19 @@ function UsuarioRoutes(usuarioController) {
    *           schema:
    *             type: object
    *             properties:
+   *               cedula:
+   *                 type: string
    *               telefono:
    *                 type: string
-   *               sexo_biologico:
+   *               sexoBiologico:
    *                 type: string
-   *               orientacion_genero:
+   *               orientacionGenero:
    *                 type: string
-   *               correo_email:
+   *               correoEmail:
    *                 type: string
-   *               Tipo_usuario:
+   *               tipoUsuario:
+   *                 type: string
+   *               deviceId:
    *                 type: string
    *     responses:
    *       201:

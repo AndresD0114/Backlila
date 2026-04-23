@@ -4,15 +4,17 @@ class IUsuarioRepository {
  
   async crear(usuario) {}
   
-  async obtenerPorId(id_usuario) {}
+  async obtenerPorId(idUsuario) {}
 
-  async obtenerPorCorreo(correo_email) {}
+  async obtenerPorCedula(cedula){}
+
+  async obtenerPorCorreo(correoEmail) {}
 
   async obtenerTodos() {}
 
-  async actualizar(id_usuario, datos) {}
+  async actualizar(idUsuario, datos) {}
 
-  async eliminar(id_usuario) {}
+  async eliminar(idUsuario) {}
 }
 
 module.exports = IUsuarioRepository;

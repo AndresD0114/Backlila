@@ -5,29 +5,33 @@
 
 class Usuario {
   constructor({
-    id_usuario = null, // GUID (lo genera la BD)
+    idUsuario = null, // GUID (lo genera la BD)
+    cedula  = null,
     telefono,
-    sexo_biologico = null,
-    orientacion_genero = null,
-    correo_email = null,
-    tipo_usuario,
+    sexoBiologico = null,
+    orientacionGenero = null,
+    correoEmail = null,
+    tipoUsuario,
     estado = true,
-    fecha_registro
+    fechaRegistro,
+    deviceId
   }) {
 
     // validación opcional
-    if (correo_email && typeof correo_email !== "string") {
+    if (correoEmail && typeof correoEmail !== "string") {
       throw new Error("El correo debe ser texto");
     }
 
-    this.id_usuario = id_usuario;
+    this.idUsuario = idUsuario;
+    this.cedula = cedula;
     this.telefono = telefono;
-    this.sexo_biologico = sexo_biologico;
-    this.orientacion_genero = orientacion_genero;
-    this.correo_email = correo_email;
-    this.tipo_usuario = tipo_usuario ;
+    this.sexoBiologico = sexoBiologico;
+    this.orientacionGenero = orientacionGenero;
+    this.correoEmail = correoEmail;
+    this.tipoUsuario = tipoUsuario ;
     this.estado = estado;
-    this.fecha_registro = fecha_registro;
+    this.fechaRegistro = fechaRegistro;
+    this.deviceId = deviceId;
   }
 
   desactivar() {

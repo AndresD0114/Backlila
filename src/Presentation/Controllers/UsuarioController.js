@@ -27,7 +27,8 @@ class UsuarioController {
       res.json(usuarios);
     } catch (error) {
       res.status(500).json({
-        message: "Error al obtener usuarios"
+        message: "Error al obtener usuarios",
+        error: error.message
       });
     }
   }
