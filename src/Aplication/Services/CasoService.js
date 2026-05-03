@@ -12,28 +12,27 @@ class CasoService {
   }
 
   async crear(data) {
-  const codigoPlano = await this.generarCodigoUnico();
-    const codigoHash = this.hashCodigo(codigoPlano);
-
+    // El codigoCaso se guarda en texto plano (sin hash) para
+    // simplificar el flujo de consulta desde la app móvil.
+    const codigoPlano = await this.generarCodigoUnico();
 
     const caso = new Caso({
-    idUsuario : data.idUsuario,
-    idTipoAcoso: data.idTipoAcoso,
-    idResponsable: data.idResponsable || null,
-    codigoCaso: codigoHash,
-    pasoInstitucion: data.pasoInstitucion === true || data.pasoInstitucion === "true"
-    ? true
-    : false,
-    descripcion: data.descripcion,
-    estado: data.estado
+      idUsuario: data.idUsuario,
+      idTipoAcoso: data.idTipoAcoso,
+      idResponsable: data.idResponsable || null,
+      codigoCaso: codigoPlano,
+      pasoInstitucion:
+        data.pasoInstitucion === true || data.pasoInstitucion === "true"
+          ? true
+          : false,
+      descripcion: data.descripcion,
+      estado: data.estado
     });
-
-
 
     await this._ICaso.crear(caso);
 
-    return{
-         codigoCaso: codigoPlano
+    return {
+      codigoCaso: codigoPlano
     };
   }
   
@@ -49,10 +48,9 @@ class CasoService {
         return await this._ICaso.obtenerTodos();
   }
   async obtenerPorCodigo(codigoCaso) {
-      const hash = this.hashCodigo(codigoCaso);
-
-        return await this._ICaso.obtenerPorCodigo(hash);
-    }
+    // Búsqueda directa con el código en texto plano.
+    return await this._ICaso.obtenerPorCodigo(codigoCaso);
+  }
 
   async actualizar(idCaso, datos) {
         return await this._ICaso.actualizar(idCaso, datos);
