@@ -6,11 +6,13 @@ class UsuarioRepository {
     try {
       const nuevo = await Usuario.create({
         telefono: usuario.telefono,
+        cedula: usuario.cedula,
         estado: usuario.estado,
-        sexo_biologico: usuario.sexo_biologico,
-        orientacion_genero: usuario.orientacion_genero,
-        correo_email: usuario.correo_email,
-        tipo_usuario: usuario.tipo_usuario
+        sexoBiologico: usuario.sexoBiologico,
+        orientacionGenero: usuario.orientacionGenero,
+        correoEmail: usuario.correoEmail,
+        tipoUsuario: usuario.tipoUsuario,
+        deviceId: usuario.deviceId
       });
 
       return nuevo;
@@ -19,19 +21,19 @@ class UsuarioRepository {
     }
   }
 
-  async obtenerPorId(id_usuario) {
+  async obtenerPorId(idUsuario) {
     try {
-      const usuario = await Usuario.findByPk(id_usuario);
+      const usuario = await Usuario.findByPk(idUsuario);
       return usuario;
     } catch (error) {
       throw new Error("Error al obtener usuario por ID: " + error.message);
     }
   }
 
-  async obtenerPorCorreo(correo_email) {
+  async obtenerPorCorreo(correoEmail) {
     try {
       const usuario = await Usuario.findOne({
-        where: { correo_email }
+        where: { correoEmail }
       });
       return usuario;
     } catch (error) {
@@ -48,9 +50,9 @@ class UsuarioRepository {
     }
   }
 
-  async actualizar(id_usuario, datos) {
+  async actualizar(idUsuario, datos) {
     try {
-      const usuario = await Usuario.findByPk(id_usuario);
+      const usuario = await Usuario.findByPk(idUsuario);
 
       if (!usuario) {
         throw new Error("Usuario no encontrado");
@@ -64,15 +66,14 @@ class UsuarioRepository {
     }
   }
 
-  async eliminar(id_usuario) {
+  async eliminar(idUsuario) {
     try {
-      const usuario = await Usuario.findByPk(id_usuario);
+      const usuario = await Usuario.findByPk(idUsuario);
 
       if (!usuario) {
         throw new Error("Usuario no encontrado");
       }
 
-      // 🔥 mejor práctica: borrado lógico
       await usuario.update({ estado: false });
 
       return true;

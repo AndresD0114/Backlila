@@ -2,10 +2,10 @@
 
 class TipoAcoso {
   constructor({
-    id_tipo_acoso = null,
+    idTipoAcoso = null,
     descripcion
   }) {
-    this.id_tipo_acoso = id_tipo_acoso;
+    this.idTipoAcoso = idTipoAcoso;
     this.descripcion = descripcion;
   }
 }
