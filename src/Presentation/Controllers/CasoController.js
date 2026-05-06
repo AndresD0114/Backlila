@@ -66,26 +66,31 @@ class CasoController {
   // OBTENER POR CÓDIGO
   // =========================
   async obtenerPorCodigo(req, res) {
-    try {
-      const { codigo } = req.params;
+  try {
+    const { codigo } = req.params;
 
-      const caso = await this.casoService.obtenerPorCodigo(codigo);
+    const caso = await this.casoService.obtenerPorCodigo(codigo);
 
-      if (!caso) {
-        return res.status(404).json({
-          mensaje: "Caso no encontrado"
-        });
-      }
-
-      res.status(200).json(caso);
-
-    } catch (error) {
-      res.status(500).json({
-        error: error.message
+    if (!caso) {
+      return res.status(404).json({
+        mensaje: "Caso no encontrado"
       });
     }
-  }
 
+    // convertir a JSON
+    const casoJson = caso.toJSON();
+
+    // reemplazar hash por el código original recibido
+    casoJson.codigoCaso = codigo;
+
+    res.status(200).json(casoJson);
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.message
+    });
+  }
+}
   // =========================
   // ACTUALIZAR
   // =========================

@@ -41,7 +41,6 @@ class CasoRepository {
     }
   }
 
-  // 🔥 CLAVE PARA TU LÓGICA
   async obtenerPorCodigo(codigoCaso) {
     try {
       const caso = await Caso.findOne({
