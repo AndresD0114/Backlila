@@ -1,0 +1,31 @@
+{
+  "name": "@lila/gateway-controller",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "private": true,
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "@lila/gateway-model": "1.0.0",
+    "@lila/gateway-proxy": "1.0.0",
+    "@lila/errors": "1.0.0",
+    "@lila/response": "1.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "swagger-ui-express": "^5.0.1"
+  }
+}
+

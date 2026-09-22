@@ -1,0 +1,20 @@
+{
+  "name": "@lila/errors",
+  "version": "1.0.0",
+  "description": "LILA errors",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@lila/response": "1.0.0"
+  }
+}
+

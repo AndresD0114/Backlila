@@ -1,0 +1,21 @@
+{
+  "name": "@lila/cases-business",
+  "version": "1.0.0",
+  "description": "LILA cases-business",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@lila/cases-models": "1.0.0",
+    "@lila/errors": "1.0.0"
+  }
+}
+

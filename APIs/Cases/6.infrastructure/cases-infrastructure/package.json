@@ -1,0 +1,23 @@
+{
+  "name": "@lila/cases-infrastructure",
+  "version": "1.0.0",
+  "description": "LILA cases-infrastructure",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@lila/cases-business": "1.0.0",
+    "@lila/cases-persistence": "1.0.0",
+    "@lila/cases-integrations": "1.0.0",
+    "dotenv": "^17.3.1"
+  }
+}
+
