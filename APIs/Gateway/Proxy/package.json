@@ -1,0 +1,19 @@
+{
+  "name": "@lila/gateway-proxy",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@lila/errors": "1.0.0"
+  }
+}
+

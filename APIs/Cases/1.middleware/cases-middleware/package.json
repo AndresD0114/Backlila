@@ -1,0 +1,22 @@
+{
+  "name": "@lila/cases-middleware",
+  "version": "1.0.0",
+  "description": "LILA cases-middleware",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@lila/errors": "1.0.0",
+    "@lila/response": "1.0.0",
+    "express": "^5.2.1",
+    "swagger-jsdoc": "^6.2.8"
+  }
+}

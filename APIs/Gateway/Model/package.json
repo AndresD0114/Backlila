@@ -1,0 +1,16 @@
+{
+  "name": "@lila/gateway-model",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=22"
+  }
+}
+

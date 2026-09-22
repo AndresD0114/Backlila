@@ -1,26 +1,24 @@
 {
-  "name": "backend",
+  "name": "lila-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "dev": "nodemon src/index.js",
-    "start": "node src/index.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "private": true,
   "type": "commonjs",
-  "dependencies": {
-    "cors": "^2.8.6",
-    "dotenv": "^17.3.1",
-    "express": "^5.2.1",
-    "mysql2": "^3.22.0",
-    "sequelize": "^6.37.8",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+  "engines": {
+    "node": ">=22"
   },
-  "devDependencies": {
-    "nodemon": "^3.1.14"
-  }
+  "workspaces": [
+    "APIs/Cases/api",
+    "APIs/Cases/[1-6].*/*",
+    "APIs/Gateway/*",
+    "shared/*"
+  ],
+  "scripts": {
+    "start": "node scripts/start.js",
+    "dev": "node scripts/start.js --watch",
+    "start:cases": "npm run start --workspace=@lila/cases-api",
+    "start:gateway": "npm run start --workspace=@lila/gateway-controller",
+    "test": "node --test tests/*.test.js",
+    "check:packages": "node scripts/check-packages.js"
+  },
+  "devDependencies": {}
 }

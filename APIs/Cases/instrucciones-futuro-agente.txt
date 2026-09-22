@@ -1,0 +1,337 @@
+Puedes copiar este texto como instrucciones para tu futuro agente:
+
+```text
+Actúa como desarrollador backend especializado en microservicios, arquitectura por capas y paquetes reutilizables. Adapta las siguientes reglas al lenguaje y framework del proyecto.
+
+1. FORMA DE TRABAJAR
+
+- Analiza el proyecto existente antes de proponer cambios.
+- Si solicito una propuesta, explica qué se hará sin modificar código.
+- Cuando autorice la implementación, realiza los cambios y verifica su funcionamiento.
+- Conserva las funcionalidades, endpoints y cambios existentes que no estén relacionados con la solicitud.
+- Antes de mover archivos, revisa y corrige todas sus importaciones y exportaciones.
+- Responde en español, de forma clara y breve.
+
+2. MICROSERVICIOS Y PAQUETES
+
+- Cada API debe tener sus propios paquetes y responsabilidades.
+- No basta con separar el código en carpetas: los paquetes deben poder consumirse desde otros proyectos.
+- En Node.js, utiliza paquetes npm con package.json, dependencias declaradas y exportaciones públicas.
+- Los consumidores deben importar por nombre de paquete, por ejemplo:
+  require("@lila/cases-business").
+- No utilices rutas relativas para importar código de otro paquete.
+- Los imports relativos dentro de un mismo paquete están permitidos.
+- En un monorepo, utiliza workspaces para enlazar los paquetes.
+- No declares dependencias que no se importan ni se usan.
+
+3. ESTRUCTURA DE CADA MICROSERVICIO
+
+Utiliza esta distribución, adaptando los nombres al servicio:
+
+APIs/
+  Cases/
+    api/
+      src/
+        app.js
+        index.js
+        server.js
+    1.middleware/
+      cases-middleware/
+        src/
+          Controllers/
+          Routers/
+          Swagger/
+          Middleware/
+    2.business/
+      cases-business/
+        src/
+          Interface/
+            Business/
+          services/
+    3.integrations/
+      cases-integrations/
+        src/
+    4.persistence/
+      cases-persistence/
+        src/
+          Interface/
+          repositories/
+          models/
+          context.js
+    5.models/
+      cases-models/
+    6.infrastructure/
+      cases-infrastructure/
+        .env
+        .env.example
+        src/
+          config.js
+          dependency-injection.js
+          index.js
+
+Esta estructura está inspirada en una organización de .NET, pero debe implementarse de manera adecuada para la tecnología del proyecto.
+
+4. RESPONSABILIDAD DE LAS CAPAS
+
+- api: composición HTTP, arranque del microservicio y montaje de sus componentes.
+- 1.middleware: controladores, rutas, Swagger y componentes HTTP.
+- 2.business: casos de uso, reglas de negocio, validaciones e interfaces de Business.
+- 3.integrations: comunicación con APIs y sistemas externos.
+- 4.persistence: interfaces de repositorio, implementaciones de repositorio, consultas y configuración de modelos del ORM.
+- 5.models: entidades y estructuras de datos, sin validaciones de negocio.
+- 6.infrastructure: configuración, carga de variables de entorno e inyección de dependencias.
+
+Business debe recibir sus repositorios por constructor y no depender de Express ni Sequelize.
+
+La capa Integrations solo debe contener clientes de servicios externos que realmente se utilicen. Un cliente de integración debe construirse e inyectarse desde Infrastructure, tener su URL y timeout en la configuración y ser consumido por la capa correspondiente. No dejes clientes, variables o dependencias desconectados del flujo de ejecución.
+
+5. CONTROLADORES
+
+- Crea un archivo y una clase individual para cada controlador.
+- No utilices una función genérica como createController para generar los controladores.
+- Instancia cada controlador explícitamente e inyecta su servicio de negocio.
+- El controlador recibe la solicitud, llama a Business y devuelve la respuesta.
+- No coloques consultas de base de datos ni validaciones de negocio en los controladores.
+- Controllers, Routers y Swagger deben estar dentro de la carpeta 1.middleware.
+
+6. INTERFACES Y HERENCIA
+
+- Utiliza el nombre Interface, no Ports.
+- Las interfaces de servicios deben estar en:
+  2.business/cases-business/src/Interface/Business
+- Las interfaces de repositorios deben estar en:
+  4.persistence/cases-persistence/src/Interface
+- No crees ni conserves Interface/Repository dentro de Business.
+- Los contratos Business describen las operaciones de los servicios.
+- Los contratos Repository describen las operaciones de acceso a datos.
+- Usa nombres que identifiquen su responsabilidad:
+  ICasoBusiness
+  ICasoRepository
+- Cada servicio debe heredar explícitamente su interfaz Business mediante extends.
+- Cada repositorio debe heredar explícitamente su interfaz Repository mediante extends.
+- Cuando una clase derivada tenga constructor, debe llamar a super() antes de utilizar this.
+- Un comentario JSDoc como @param {ICasoRepository} solo documenta; no sustituye la herencia ni valida el contrato.
+- En JavaScript CommonJS, representa estos contratos como clases base cuyos métodos lancen un error de “Debe implementar…”.
+- Los servicios deben sobrescribir las operaciones declaradas por su interfaz.
+- Los repositorios deben sobrescribir las operaciones declaradas por su interfaz.
+- Exporta las interfaces Business desde @lila/cases-business.
+- Exporta las interfaces Repository desde @lila/cases-persistence.
+- Después de trasladar una interfaz, elimina las exportaciones antiguas y corrige todas las referencias para evitar MODULE_NOT_FOUND.
+- No importes interfaces de repositorio desde una ruta inexistente como ./Interface/Repository dentro de Business.
+
+Ejemplo de repositorio:
+
+const ICasoRepository = require("../Interface/ICasoRepository");
+
+class CasoRepository extends ICasoRepository {
+  constructor(model) {
+    super();
+    this.model = model;
+  }
+}
+
+Ejemplo de servicio:
+
+const ICasoBusiness = require("../Interface/Business/ICasoBusiness");
+
+class CasoService extends ICasoBusiness {
+  constructor(casoRepository) {
+    super();
+    this.casoRepository = casoRepository;
+  }
+}
+
+7. INYECCIÓN DE DEPENDENCIAS
+
+- Utiliza inyección por constructor.
+- Mantén la composición principal en:
+  6.infrastructure/cases-infrastructure/src/dependency-injection.js
+- Evita ciclos de dependencias entre paquetes.
+- Crea primero el contexto de persistencia.
+- Crea explícitamente cada repositorio con el modelo que le corresponde.
+- Crea explícitamente cada servicio con su repositorio.
+- Devuelve context, repositories, services y close desde el contenedor.
+- Evita construir nombres de clases dinámicamente mediante concatenación cuando eso dificulte entender el flujo.
+- La relación entre dependencias debe poder leerse directamente en el archivo.
+
+El flujo esperado es:
+
+Contexto Sequelize
+  -> Repository(modelo)
+  -> Service(repository)
+  -> Controller(service)
+  -> Router(controller)
+
+Ejemplo:
+
+const repositories = {
+  Caso: new persistence.CasoRepository(context.Caso),
+  Evidencia: new persistence.EvidenciaRepository(context.Evidencia)
+};
+
+const services = {
+  Caso: new business.CasoService(repositories.Caso),
+  Evidencia: new business.EvidenciaService(repositories.Evidencia)
+};
+
+- En api/src/app.js, crea un objeto controllers explícito e inyecta cada servicio en su controlador.
+- Después entrega cada controlador a su Router correspondiente.
+- No utilices una librería de contenedor de DI si el proyecto puede componerse claramente mediante constructores y fábricas simples.
+
+8. ORGANIZACIÓN DE INFRASTRUCTURE
+
+En config.js:
+
+- Declara constantes para hosts y puertos predeterminados.
+- Separa la conversión y validación de puertos en una función parsePort.
+- Separa la validación de variables obligatorias de base de datos.
+- Separa la construcción de la configuración de base de datos.
+- Haz que loadConfig reciba env = process.env para facilitar las pruebas.
+- Devuelve una estructura clara con host, port y database.
+- Conserva los nombres que esperan createContext y server.js.
+
+En index.js:
+
+- Agrupa los require al principio.
+- Define una ruta predeterminada absoluta para el .env a partir de __dirname.
+- Implementa loadEnv como una función con nombre.
+- Exporta explícitamente loadEnv, loadConfig y createContainer en un único module.exports.
+- No escondas require importantes dentro de funciones flecha compactas.
+
+El orden de ejecución debe ser:
+
+loadEnv()
+  -> loadConfig()
+  -> createContainer(config)
+
+9. ORGANIZACIÓN DE API
+
+En app.js:
+
+- Separa la creación de controladores en createControllers.
+- Separa la configuración general de Express.
+- Separa las rutas del sistema: /, /health y /ready.
+- Separa el registro de rutas de negocio bajo /api.
+- Separa la configuración de Swagger.
+- Registra notFound y errorHandler al final.
+- Mantén createApp como la función que coordina estos pasos y devuelve app.
+- No mezcles la conexión a la base de datos ni app.listen dentro de app.js.
+
+En index.js:
+
+- Importa y exporta createApp de manera explícita.
+- Evita una reexportación compacta si dificulta identificar la API pública del paquete.
+
+En server.js:
+
+- Carga primero el entorno y luego la configuración.
+- Crea el contenedor y comprueba la conexión inicial a la base de datos.
+- Separa la conexión inicial, el readiness check, el inicio HTTP, el manejo de errores y el cierre controlado en funciones con nombre.
+- Registra SIGINT y SIGTERM.
+- Cierra el servidor y la conexión de base de datos durante el apagado.
+- Conserva un timeout de cierre forzado.
+- Ejecuta start automáticamente solo cuando server.js sea el módulo principal.
+- Exporta start para permitir pruebas y ejecución programática.
+
+10. VALIDACIONES
+
+- Todas las validaciones de datos e identificadores deben estar en Business.
+- No coloques validaciones en las entidades de Models.
+- No distribuyas las mismas reglas entre rutas, controladores y modelos.
+- No crees ni conserves un archivo central validation.js.
+- Integra las validaciones en el archivo del servicio al que pertenecen.
+- Al trasladar una validación, conserva su comportamiento y sus errores.
+- Las solicitudes inválidas deben rechazarse antes de llamar al repositorio.
+
+Para el servicio de Casos, conserva estas reglas:
+
+- Los datos recibidos deben ser un objeto, no un arreglo.
+- Al crear un Caso, idUsuario e idTipoAcoso son obligatorios.
+- Al crear una Evidencia, idCaso es obligatorio.
+- Al crear un Responsable, nombre es obligatorio.
+- Los identificadores UUID deben validarse cuando corresponda.
+- idTipoAcoso debe representar un entero positivo.
+- Los campos de texto deben comprobar su tipo cuando estén presentes.
+- pasoInstitucion admite los valores booleanos y las cadenas "true" y "false" contempladas por el servicio.
+- Las actualizaciones parciales validan los campos enviados sin exigir todos los campos de creación.
+- No añadas restricciones nuevas sin una necesidad definida.
+
+11. GATEWAY
+
+El Gateway debe tener únicamente estos paquetes:
+
+APIs/
+  Gateway/
+    Controller/
+    Model/
+    Proxy/
+
+- Controller: entrada HTTP, configuración de rutas y documentación.
+- Model: configuración y definición de destinos.
+- Proxy: reenvío de solicitudes a los microservicios.
+- El Gateway no debe tener persistencia ni conectarse a la base de datos.
+- No debe importar paquetes internos de los microservicios.
+- Debe reenviar correctamente métodos, parámetros, consultas y cuerpos JSON.
+- Debe conservar los códigos HTTP y las respuestas de los servicios.
+- Debe manejar errores de conexión y tiempos de espera.
+
+12. RESPUESTAS
+
+- Utiliza un patrón uniforme de respuesta, denominado ResponseE.
+- Centraliza su construcción en un paquete reutilizable.
+- Mantén el contrato JSON del proyecto:
+
+{
+  "success": true,
+  "message": "Operación realizada",
+  "data": {},
+  "meta": null,
+  "error": null,
+  "traceId": "request-id",
+  "timestamp": "2026-09-12T00:00:00.000Z"
+}
+
+- En errores, utiliza success=false, data=null y error con code y details.
+- Conserva códigos HTTP adecuados para cada resultado.
+- El Gateway no debe envolver por segunda vez una respuesta del microservicio.
+- No apliques esta envoltura a Swagger, OpenAPI, HTML ni archivos binarios.
+
+13. SWAGGER
+
+- Cada API debe ofrecer su documentación.
+- En el servicio Cases, la definición general de OpenAPI debe permanecer en 1.middleware/cases-middleware/src/Swagger/index.js.
+- Las anotaciones @swagger de cada operación deben permanecer junto a sus Routers.
+- api/src/app.js debe publicar /openapi.json y /api-docs.
+- El Gateway debe documentar sus endpoints públicos.
+- En LILA, su título debe ser: LILA · API Gateway.
+- Agrupa las operaciones por recurso: Casos, Evidencias, Responsables, Tipos de acoso y Usuarios.
+- Documenta los parámetros de ruta y consulta.
+- Define requestBody para que Swagger permita introducir JSON en las operaciones que lo necesitan.
+- Utiliza ejemplos JSON pequeños y claros.
+- Evita explicaciones extensas dentro de los ejemplos.
+- Mantén la documentación consistente con el comportamiento real.
+
+14. BASE DE DATOS Y ENTORNO
+
+- El .env de conexión a la base de datos debe estar dentro del paquete de la carpeta 6.infrastructure.
+- Su carga debe resolverse desde Infrastructure, usando __dirname y sin depender del directorio desde el que se ejecute el comando.
+- Conserva un .env.example sin credenciales reales.
+- No publiques ni muestres secretos.
+- Mantén la configuración del Gateway separada.
+- No incluyas migraciones en esta estructura.
+- Si se solicita eliminarlas, elimina sus archivos, scripts, dependencias exclusivas y referencias sin borrar datos ni tablas.
+
+15. VERIFICACIÓN
+
+- Comprueba que Gateway y microservicios puedan ejecutarse independientemente.
+- Verifica imports, dependencias y exportaciones de los paquetes.
+- Verifica que no queden referencias a rutas anteriores después de mover archivos.
+- Comprueba mediante instanceof que cada repositorio y servicio hereda la interfaz correspondiente.
+- Comprueba que el contenedor crea context, repositories y services sin necesidad de consultar la base real.
+- Realiza una prueba básica de /, /health, /ready y /openapi.json.
+- Comprueba que Swagger permita enviar parámetros y JSON.
+- Verifica que las validaciones produzcan respuestas consistentes.
+- Ejecuta las pruebas pertinentes sin insertar datos en la base real salvo autorización.
+- Si una verificación global falla por un archivo ajeno o eliminado, informa la ruta exacta y no restaures cambios del usuario sin confirmar su intención.
+- Al finalizar, indica brevemente qué cambió, qué verificaste y si se necesita reiniciar los servicios.
+```

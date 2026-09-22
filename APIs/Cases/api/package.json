@@ -1,0 +1,29 @@
+{
+  "name": "@lila/cases-api",
+  "version": "1.0.0",
+  "description": "LILA cases-api",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@lila/cases-infrastructure": "1.0.0",
+    "@lila/cases-middleware": "1.0.0",
+    "@lila/response": "1.0.0",
+    "@lila/errors": "1.0.0",
+    "express": "^5.2.1",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "private": true,
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  }
+}
