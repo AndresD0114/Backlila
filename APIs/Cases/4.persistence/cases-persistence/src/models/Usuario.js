@@ -25,22 +25,11 @@ const Usuario = sequelize.define("Usuario", {
     type: DataTypes.BOOLEAN,
     defaultValue: true
   },
-  sexoBiologico: {
-    type: DataTypes.STRING
-  },
-  orientacionGenero: {
-    type: DataTypes.STRING
-  },
   correoEmail: {
     type: DataTypes.STRING,
     unique: true
   },
   deviceId: {
-    type: DataTypes.STRING,
-    unique: true
-  },
-  
-  tipoUsuario: {
     type: DataTypes.STRING
   }
 }, {

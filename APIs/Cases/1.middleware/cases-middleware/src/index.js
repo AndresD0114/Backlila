@@ -8,6 +8,7 @@ module.exports = {
     Caso: require("./Routers/CasoRoutes"),
     Evidencia: require("./Routers/EvidenciaRoutes"),
     Responsable: require("./Routers/ResponsableRoutes"),
+    RegistroCaso: require("./Routers/RegistroCasoRoutes"),
     TipoAcoso: require("./Routers/TipoAcosoRoutes"),
     Usuario: require("./Routers/UsuarioRoutes")
   }

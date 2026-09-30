@@ -7,6 +7,12 @@ function createContainer(config) {
   const repositories = {
     Caso: new persistence.CasoRepository(context.Caso),
     Evidencia: new persistence.EvidenciaRepository(context.Evidencia),
+    RegistroCaso: new persistence.RegistroCasoRepository(
+      context.sequelize,
+      context.Usuario,
+      context.Caso,
+      context.InfoAfectado
+    ),
     Responsable: new persistence.ResponsableRepository(context.Responsable),
     TipoAcoso: new persistence.TipoAcosoRepository(context.TipoAcoso),
     Usuario: new persistence.UsuarioRepository(context.Usuario)
@@ -15,6 +21,7 @@ function createContainer(config) {
   const services = {
     Caso: new business.CasoService(repositories.Caso),
     Evidencia: new business.EvidenciaService(repositories.Evidencia),
+    RegistroCaso: new business.RegistroCasoService(repositories.RegistroCaso),
     Responsable: new business.ResponsableService(repositories.Responsable),
     TipoAcoso: new business.TipoAcosoService(repositories.TipoAcoso),
     Usuario: new business.UsuarioService(repositories.Usuario)

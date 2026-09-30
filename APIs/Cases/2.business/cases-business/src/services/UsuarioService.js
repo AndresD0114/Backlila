@@ -13,7 +13,7 @@ function validarUsuario(data) {
     throw new ValidationError("Los datos deben ser un objeto");
   }
   const errores = [];
-  for (const campo of ["correoEmail", "telefono"]) {
+  for (const campo of ["correoEmail", "telefono", "deviceId"]) {
     if (data[campo] != null && typeof data[campo] !== "string") errores.push(campo + " debe ser texto");
   }
   if (errores.length) throw new ValidationError("Datos inválidos", errores);
@@ -30,13 +30,16 @@ class UsuarioService extends IUsuarioBusiness {
 
   async crear(data) {
     validarUsuario(data);
+
+    if (data.deviceId) {
+      const usuarioExistente = await this.usuarioRepository.obtenerPorDeviceId(data.deviceId);
+      if (usuarioExistente) return usuarioExistente;
+    }
+
     const usuario = new Usuario({
       telefono: data.telefono,
       cedula: data.cedula || null ,
-      sexoBiologico: data.sexoBiologico,
-      orientacionGenero: data.orientacionGenero,
       correoEmail: data.correoEmail,
-      tipoUsuario: data.tipoUsuario,
       estado: data.estado ?? true,
       deviceId:  data.deviceId
     });

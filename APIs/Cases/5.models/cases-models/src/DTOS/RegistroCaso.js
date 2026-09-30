@@ -1,6 +1,8 @@
 class RegistroCasoDTO {
-    constructor(usuario, infoAfectado) {
-        Object.assign(this, usuario, infoAfectado);
-    }
+  constructor(usuario, infoAfectado) {
+    this.usuario = usuario;
+    this.infoAfectado = infoAfectado;
+  }
 }
+
 module.exports = RegistroCasoDTO;

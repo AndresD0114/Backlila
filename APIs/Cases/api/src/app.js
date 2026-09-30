@@ -17,6 +17,7 @@ function createControllers(services) {
   return {
     Caso: new Controllers.CasoController(services.Caso),
     Evidencia: new Controllers.EvidenciaController(services.Evidencia),
+    RegistroCaso: new Controllers.RegistroCasoController(services.RegistroCaso),
     Responsable: new Controllers.ResponsableController(services.Responsable),
     TipoAcoso: new Controllers.TipoAcosoController(services.TipoAcoso),
     Usuario: new Controllers.UsuarioController(services.Usuario)
@@ -58,6 +59,7 @@ function registerBusinessRoutes(app, controllers) {
   app.use(API_PATH, Routers.Caso(controllers.Caso));
   app.use(API_PATH, Routers.Evidencia(controllers.Evidencia));
   app.use(API_PATH, Routers.Responsable(controllers.Responsable));
+  app.use(API_PATH, Routers.RegistroCaso(controllers.RegistroCaso));
   app.use(API_PATH, Routers.TipoAcoso(controllers.TipoAcoso));
   app.use(API_PATH, Routers.Usuario(controllers.Usuario));
 }

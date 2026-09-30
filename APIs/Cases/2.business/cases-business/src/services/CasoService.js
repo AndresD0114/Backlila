@@ -1,5 +1,5 @@
 const { ValidationError } = require("@lila/errors");
-const { Caso } = require("@lila/cases-models");
+const { Caso, ConsultaCasoDTO } = require("@lila/cases-models");
 const ICasoBusiness = require("../Interface/Business/ICasoBusiness");
 const crypto = require("crypto");
 
@@ -72,7 +72,9 @@ class CasoService extends ICasoBusiness {
 
   async obtenerPorCodigo(codigoCaso) {
     const hash = this.hashCodigo(codigoCaso);
-    return await this.casoRepository.obtenerPorCodigo(hash);
+    const caso = await this.casoRepository.obtenerPorCodigo(hash);
+
+    return caso ? new ConsultaCasoDTO(caso, codigoCaso) : null;
   }
 
   async actualizar(idCaso, datos) {

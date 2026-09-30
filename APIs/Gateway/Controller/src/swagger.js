@@ -23,6 +23,32 @@ const schemas = {
       estado: { type: "string" }
     }
   },
+  RegistroCaso: {
+    type: "object",
+    required: ["usuario", "infoAfectado"],
+    properties: {
+      usuario: {
+        type: "object",
+        required: ["deviceId"],
+        properties: {
+          cedula: { type: "string" },
+          telefono: { type: "string" },
+          correoEmail: { type: "string", format: "email" },
+          deviceId: { type: "string" }
+        }
+      },
+      infoAfectado: {
+        type: "object",
+        required: ["idCaso"],
+        properties: {
+          sexoBiologico: { type: "string" },
+          orientacionGenero: { type: "string" },
+          tipoUsuario: { type: "string" },
+          idCaso: { type: "string", format: "uuid" }
+        }
+      }
+    }
+  },
   Evidencia: {
     type: "object",
     required: ["idCaso"],
@@ -56,6 +82,15 @@ const schemas = {
 
 const examples = {
   Caso: { idUsuario: "00000000-0000-0000-0000-000000000000", idTipoAcoso: 1, pasoInstitucion: false, descripcion: "Texto", estado: "pendiente" },
+  RegistroCaso: {
+    usuario: { deviceId: "device-id" },
+    infoAfectado: {
+      idCaso: "00000000-0000-0000-0000-000000000000",
+      sexoBiologico: "Femenino",
+      orientacionGenero: "Bisexual",
+      tipoUsuario: "adulto"
+    }
+  },
   Evidencia: { idCaso: "00000000-0000-0000-0000-000000000000", tipoArchivo: "imagen", urlArchivo: "https://example.com/file" },
   Responsable: { nombre: "Nombre", telefono: "3000000000", cargo: "Cargo", correoEmail: "correo@example.com" },
   Usuario: { cedula: "000000000", telefono: "3000000000", correoEmail: "correo@example.com", tipoUsuario: "usuario", deviceId: "device-id" }
@@ -116,6 +151,7 @@ function createSpec() {
     paths: {
       "/health": { get: { tags: ["Gateway"], summary: "Estado", responses: { "200": response("Correcto") } } },
       "/api/casos": operations("Casos", "Casos", [["get", "200"], ["post", "201", "Caso"]]),
+      "/api/registro-caso": operations("Casos", "Registrar usuario e información de la persona afectada", [["post", "201", "RegistroCaso"]]),
       "/api/casos/{id}": operations("Casos", "Caso por ID", [["get", "200"], ["put", "200", "Caso"], ["delete", "200"]], [pathParameter("id", "ID")]),
       "/api/casos/codigo/{codigo}": operations("Casos", "Caso por código", [["get", "200"]], [pathParameter("codigo", "Código")]),
       "/api/evidencias": operations("Evidencias", "Evidencias", [["get", "200"], ["post", "201", "Evidencia"]]),

@@ -3,7 +3,6 @@ const { Sequelize, DataTypes } = require("sequelize");
 module.exports = function defineEvidencia(sequelize) {
   
 const Evidencia = sequelize.define("Evidencia", {
-  estado: { type: DataTypes.STRING(20), defaultValue: "activo", allowNull: false },
   idEvidencia: {
     type: DataTypes.UUID,
     primaryKey: true,

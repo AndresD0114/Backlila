@@ -54,6 +54,8 @@ const Caso = require("./models/Caso")(sequelize);
 
 const Evidencia = require("./models/Evidencia")(sequelize);
 
+const InfoAfectado = require("./models/InfoAfectado")(sequelize);
+
 //========================
 // Relaciones
 //========================
@@ -72,6 +74,9 @@ Caso.belongsTo(Responsable, { foreignKey: "idResponsable" });
 // Caso -> Evidencia
 Caso.hasMany(Evidencia, { foreignKey: "idCaso" });
 Evidencia.belongsTo(Caso, { foreignKey: "idCaso" });
+
+Caso.hasOne(InfoAfectado, { foreignKey: "idCaso" });
+InfoAfectado.belongsTo(Caso, { foreignKey: "idCaso" });
 // =======================
 // EXPORTAR (DbContext)
 // =======================
@@ -82,7 +87,8 @@ return {
   TipoAcoso,
   Responsable,
   Caso,
-  Evidencia
+  Evidencia,
+  InfoAfectado
 };
 }
 module.exports = { createContext };

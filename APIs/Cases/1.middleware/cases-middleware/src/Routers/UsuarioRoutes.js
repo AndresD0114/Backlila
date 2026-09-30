@@ -27,13 +27,7 @@ function UsuarioRoutes(usuarioController) {
    *                 type: string
    *               telefono:
    *                 type: string
-   *               sexoBiologico:
-   *                 type: string
-   *               orientacionGenero:
-   *                 type: string
    *               correoEmail:
-   *                 type: string
-   *               tipoUsuario:
    *                 type: string
    *               deviceId:
    *                 type: string
