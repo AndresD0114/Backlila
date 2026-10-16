@@ -1,7 +1,7 @@
 const { ValidationError } = require("@lila/errors");
 const { Responsable } = require("@lila/cases-models");
 const IResponsableBusiness = require("../Interface/Business/IResponsableBusiness");
-const validarId = require("../helpers/validaitor");
+const { validarId } = require("../helpers/validator");
 
 
 function validarResponsable(data, parcial = false) {
@@ -40,7 +40,7 @@ class ResponsableService extends IResponsableBusiness {
   }
   
   async obtenerPorId(idResponsable) {
-    validarId(idResponsable);
+    validarId(idResponsable, "idResponsable");
     return await this.responsableRepository.obtenerPorId(idResponsable);
   }
 
@@ -49,13 +49,13 @@ class ResponsableService extends IResponsableBusiness {
   }
 
   async actualizar(idResponsable, datos) {
-    validarId(idResponsable);
+    validarId(idResponsable, "idResponsable");
     validarResponsable(datos, true);
     return await this.responsableRepository.actualizar(idResponsable, datos);
   }
 
   async eliminar(idResponsable) {
-    validarId(idResponsable);
+    validarId(idResponsable, "idResponsable");
     return await this.responsableRepository.eliminar(idResponsable);
   }
 

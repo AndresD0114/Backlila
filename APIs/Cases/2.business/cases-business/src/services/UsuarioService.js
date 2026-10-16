@@ -2,7 +2,7 @@ const { ValidationError } = require("@lila/errors");
 const { Usuario } = require("@lila/cases-models");
 const IUsuarioBusiness = require("../Interface/Business/IUsuarioBusiness");
 const crypto = require("node:crypto");
-const validarId = require("../helpers/validaitor");
+const { validarId } = require("../helpers/validator");
 
 function validarUsuario(data) {
   if (!data || typeof data !== "object" || Array.isArray(data)) {
@@ -47,7 +47,7 @@ class UsuarioService extends IUsuarioBusiness {
   }
 
   async obtenerPorId(idUsuario) {
-    validarId(idUsuario);
+    validarId(idUsuario, "idUsuario");
     return await this.usuarioRepository.obtenerPorId(idUsuario);
   }
 
@@ -60,13 +60,13 @@ class UsuarioService extends IUsuarioBusiness {
   }
 
   async actualizar(idUsuario, datos) {
-    validarId(idUsuario);
+    validarId(idUsuario, "idUsuario");
     validarUsuario(datos);
     return await this.usuarioRepository.actualizar(idUsuario, datos);
   }
 
   async eliminar(idUsuario) {
-    validarId(idUsuario);
+    validarId(idUsuario, "idUsuario");
     return await this.usuarioRepository.eliminar(idUsuario);
   }
 }

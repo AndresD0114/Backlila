@@ -14,19 +14,18 @@ class EvidenciaRepository extends IEvidenciaRepository {
   async obtenerPorCaso(idCaso) { return this.model.findAll({ where: { idCaso } }); }
   async requireRecord(id) {
     const record = await this.obtenerPorId(id);
-    if (!record) throw new NotFoundError("Evidencia no encontrado");
+    if (!record) throw new NotFoundError("Evidencia no encontrada");
     return record;
   }
   async actualizar(id, data) {
     const record = await this.requireRecord(id);
-    const updateFields = writable.filter(key => !["codigoCaso"].includes(key));
-    const values = Object.fromEntries(updateFields.filter(key => data[key] !== undefined).map(key => [key, data[key]]));
+    const values = Object.fromEntries(writable.filter(key => data[key] !== undefined).map(key => [key, data[key]]));
     
     return record.update(values);
   }
   async eliminar(id) {
     const record = await this.requireRecord(id);
-    await record.update({ estado: "inactivo" });
+    await record.destroy();
     return true;
   }
 }

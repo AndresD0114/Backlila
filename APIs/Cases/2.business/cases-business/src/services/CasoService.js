@@ -1,9 +1,15 @@
 const { ValidationError } = require("@lila/errors");
 
-const { Caso, ConsultaCasoDTO,  CrearCasoDTO, InfoAfectado, Usuario} = require("@lila/cases-models");
+const {
+  Caso,
+  ConsultaCasoDTO,
+  CrearCasoDTO,
+  InfoAfectado,
+  Usuario
+} = require("@lila/cases-models");
 const ICasoBusiness = require("../Interface/Business/ICasoBusiness");
 const crypto = require("crypto");
-const validarId = require("../helpers/validaitor");
+const { esUuid, validarId } = require("../helpers/validator");
 
 
 function validarCaso(data, parcial = false) {
@@ -21,8 +27,8 @@ function validarCaso(data, parcial = false) {
       errores.push("infoAfectado debe ser un objeto");
     }
   }
-  if (data.idUsuario != null && !uuid.test(data.idUsuario)) errores.push("idUsuario debe ser un UUID");
-  if (data.idResponsable != null && !uuid.test(data.idResponsable)) errores.push("idResponsable debe ser un UUID");
+  if (data.idUsuario != null && !esUuid(data.idUsuario)) errores.push("idUsuario debe ser un UUID");
+  if (data.idResponsable != null && !esUuid(data.idResponsable)) errores.push("idResponsable debe ser un UUID");
   if (data.idTipoAcoso != null && (!Number.isInteger(Number(data.idTipoAcoso)) || Number(data.idTipoAcoso) < 1)) errores.push("idTipoAcoso debe ser un entero positivo");
   if (data.descripcion != null && typeof data.descripcion !== "string") errores.push("descripcion debe ser texto");
   if (data.pasoInstitucion != null && ![true, false, "true", "false"].includes(data.pasoInstitucion)) errores.push("pasoInstitucion debe ser booleano");
@@ -39,7 +45,7 @@ function validarCaso(data, parcial = false) {
     if (typeof usuario.deviceId !== "string" || !usuario.deviceId.trim()) {
       errores.push("usuario.deviceId es obligatorio y debe ser texto");
     }
-    if (usuario.idUsuario != null && !uuid.test(usuario.idUsuario)) {
+    if (usuario.idUsuario != null && !esUuid(usuario.idUsuario)) {
       errores.push("usuario.idUsuario debe ser un UUID");
     }
 
@@ -111,7 +117,7 @@ class CasoService extends ICasoBusiness {
     return crypto.createHash("sha256").update(codigo).digest("hex");
   }
 
-    async crear(data) {
+  async crear(data) {
     validarCaso(data);
     const codigoPlano = await this.#generarCodigoUnico();
     const codigoHash = this.#hashCodigo(codigoPlano);
@@ -172,7 +178,7 @@ class CasoService extends ICasoBusiness {
   }
 
   async obtenerPorCodigo(codigoCaso) {
-    const hash = this.hashCodigo(codigoCaso);
+    const hash = this.#hashCodigo(codigoCaso);
     const caso = await this.casoRepository.obtenerPorCodigo(hash);
 
     return caso ? new ConsultaCasoDTO(caso, codigoCaso) : null;
