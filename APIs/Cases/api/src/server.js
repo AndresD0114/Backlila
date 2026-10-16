@@ -72,7 +72,13 @@ async function start() {
 
 if (require.main === module) {
   start().catch(error => {
-    console.error(`No se pudo iniciar Casos: ${error.name}`);
+    console.error("No se pudo iniciar Casos:", {
+      name: error.name,
+      message: error.message,
+      code: error.original?.code,
+      sqlState: error.original?.sqlState
+    });
+
     process.exitCode = 1;
   });
 }

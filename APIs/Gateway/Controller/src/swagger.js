@@ -13,38 +13,31 @@ const schemas = {
   },
   Caso: {
     type: "object",
-    required: ["idUsuario", "idTipoAcoso"],
+    required: ["usuario", "idTipoAcoso", "infoAfectado"],
     properties: {
       idUsuario: { type: "string", format: "uuid" },
-      idTipoAcoso: { type: "integer" },
-      idResponsable: { type: "string", format: "uuid", nullable: true },
-      pasoInstitucion: { type: "boolean" },
-      descripcion: { type: "string" },
-      estado: { type: "string" }
-    }
-  },
-  RegistroCaso: {
-    type: "object",
-    required: ["usuario", "infoAfectado"],
-    properties: {
       usuario: {
         type: "object",
         required: ["deviceId"],
         properties: {
+          idUsuario: { type: "string", format: "uuid" },
           cedula: { type: "string" },
           telefono: { type: "string" },
           correoEmail: { type: "string", format: "email" },
           deviceId: { type: "string" }
         }
       },
+      idTipoAcoso: { type: "integer" },
+      idResponsable: { type: "string", format: "uuid", nullable: true },
+      pasoInstitucion: { type: "boolean" },
+      descripcion: { type: "string" },
+      estado: { type: "string" },
       infoAfectado: {
         type: "object",
-        required: ["idCaso"],
         properties: {
           sexoBiologico: { type: "string" },
           orientacionGenero: { type: "string" },
-          tipoUsuario: { type: "string" },
-          idCaso: { type: "string", format: "uuid" }
+          tipoUsuario: { type: "string" }
         }
       }
     }
@@ -81,11 +74,17 @@ const schemas = {
 };
 
 const examples = {
-  Caso: { idUsuario: "00000000-0000-0000-0000-000000000000", idTipoAcoso: 1, pasoInstitucion: false, descripcion: "Texto", estado: "pendiente" },
-  RegistroCaso: {
-    usuario: { deviceId: "device-id" },
+  Caso: {
+    idUsuario: "00000000-0000-0000-0000-000000000000",
+    usuario: {
+      idUsuario: "00000000-0000-0000-0000-000000000000",
+      deviceId: "device-id"
+    },
+    idTipoAcoso: 1,
+    pasoInstitucion: false,
+    descripcion: "Texto",
+    estado: "pendiente",
     infoAfectado: {
-      idCaso: "00000000-0000-0000-0000-000000000000",
       sexoBiologico: "Femenino",
       orientacionGenero: "Bisexual",
       tipoUsuario: "adulto"
@@ -150,8 +149,7 @@ function createSpec() {
     ],
     paths: {
       "/health": { get: { tags: ["Gateway"], summary: "Estado", responses: { "200": response("Correcto") } } },
-      "/api/casos": operations("Casos", "Casos", [["get", "200"], ["post", "201", "Caso"]]),
-      "/api/registro-caso": operations("Casos", "Registrar usuario e información de la persona afectada", [["post", "201", "RegistroCaso"]]),
+      "/api/casos": operations("Casos", "Registrar y consultar casos", [["get", "200"], ["post", "201", "Caso"]]),
       "/api/casos/{id}": operations("Casos", "Caso por ID", [["get", "200"], ["put", "200", "Caso"], ["delete", "200"]], [pathParameter("id", "ID")]),
       "/api/casos/codigo/{codigo}": operations("Casos", "Caso por código", [["get", "200"]], [pathParameter("codigo", "Código")]),
       "/api/evidencias": operations("Evidencias", "Evidencias", [["get", "200"], ["post", "201", "Evidencia"]]),

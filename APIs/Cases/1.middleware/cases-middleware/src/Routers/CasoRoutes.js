@@ -14,7 +14,7 @@ function CasoRoutes(casoController) {
    * @swagger
    * /api/casos:
    *   post:
-   *     summary: Crear un caso
+   *     summary: Registrar un caso y la información de la persona afectada
    *     tags: [Casos]
    *     requestBody:
    *       required: true
@@ -22,9 +22,27 @@ function CasoRoutes(casoController) {
    *         application/json:
    *           schema:
    *             type: object
+   *             required: [usuario, idTipoAcoso, infoAfectado]
    *             properties:
    *               idUsuario:
    *                 type: string
+   *                 format: uuid
+   *                 description: UUID previamente asignado; se ignora si el deviceId ya existe
+   *               usuario:
+   *                 type: object
+   *                 required: [deviceId]
+   *                 properties:
+   *                   idUsuario:
+   *                     type: string
+   *                     format: uuid
+   *                   cedula:
+   *                     type: string
+   *                   telefono:
+   *                     type: string
+   *                   correoEmail:
+   *                     type: string
+   *                   deviceId:
+   *                     type: string
    *               idTipoAcoso:
    *                 type: integer
    *               idResponsable:
@@ -33,9 +51,18 @@ function CasoRoutes(casoController) {
    *                 type: boolean
    *               descripcion:
    *                 type: string
+   *               infoAfectado:
+   *                 type: object
+   *                 properties:
+   *                   sexoBiologico:
+   *                     type: string
+   *                   orientacionGenero:
+   *                     type: string
+   *                   tipoUsuario:
+   *                     type: string
    *     responses:
    *       201:
-   *         description: Caso creado correctamente
+   *         description: Caso registrado correctamente
    *         content:
    *           application/json:
    *             schema:
@@ -45,6 +72,9 @@ function CasoRoutes(casoController) {
    *                   type: string
    *                 codigoCaso:
    *                   type: string
+   *                 idCaso:
+   *                   type: string
+   *                   format: uuid
    */
   router.post("/casos", (req, res) =>
     casoController.crear(req, res)

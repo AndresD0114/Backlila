@@ -1,8 +1,6 @@
 
 // clase que define
 
-
-
 class Responsable{
   constructor({
     idResponsable = null, // GUID (lo genera la BD)

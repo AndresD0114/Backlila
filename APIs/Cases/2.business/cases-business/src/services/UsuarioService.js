@@ -1,12 +1,8 @@
 const { ValidationError } = require("@lila/errors");
 const { Usuario } = require("@lila/cases-models");
 const IUsuarioBusiness = require("../Interface/Business/IUsuarioBusiness");
-
-const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-function validarId(value) {
-  if (!uuid.test(value)) throw new ValidationError("idUsuario debe ser un UUID");
-}
+const crypto = require("node:crypto");
+const validarId = require("../helpers/validaitor");
 
 function validarUsuario(data) {
   if (!data || typeof data !== "object" || Array.isArray(data)) {
@@ -37,6 +33,7 @@ class UsuarioService extends IUsuarioBusiness {
     }
 
     const usuario = new Usuario({
+      idUsuario: crypto.randomUUID(),
       telefono: data.telefono,
       cedula: data.cedula || null ,
       correoEmail: data.correoEmail,

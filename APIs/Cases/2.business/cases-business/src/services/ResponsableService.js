@@ -1,12 +1,8 @@
 const { ValidationError } = require("@lila/errors");
 const { Responsable } = require("@lila/cases-models");
 const IResponsableBusiness = require("../Interface/Business/IResponsableBusiness");
+const validarId = require("../helpers/validaitor");
 
-const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-function validarId(value) {
-  if (!uuid.test(value)) throw new ValidationError("idResponsable debe ser un UUID");
-}
 
 function validarResponsable(data, parcial = false) {
   if (!data || typeof data !== "object" || Array.isArray(data)) {

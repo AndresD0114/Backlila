@@ -8,7 +8,7 @@ class CasoController {
 
   async crear(req, res) {
     const data = await this.casoBusiness.crear(req.body);
-    return ApiResponse.created(res, data, "Caso creado correctamente");
+    return ApiResponse.created(res, data, "Caso registrado correctamente");
   }
 
   async obtenerTodos(req, res) {

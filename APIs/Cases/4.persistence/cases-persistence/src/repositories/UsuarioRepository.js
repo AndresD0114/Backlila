@@ -2,21 +2,40 @@ const crypto = require("node:crypto");
 const { NotFoundError } = require("@lila/errors");
 const IUsuarioRepository = require("../Interface/IUsuarioRepository");
 const writable = ["telefono", "cedula", "estado", "correoEmail", "deviceId"];
+
+const REGISTRAR_USUARIO = `CALL PRC_RegistrarUsuario(
+  :idUsuario,
+  :cedula,
+  :telefono,
+  :correoEmail,
+  :deviceId,
+  :estado
+)`;
+
 class UsuarioRepository extends IUsuarioRepository {
   constructor(model) {
     super();
     this.model = model;
   }
   async crear(data) {
-    const values = Object.fromEntries(
-      writable
-        .filter(key => data[key] !== undefined)
-        .map(key => [key, data[key]])
-    );
+    const registrarUsuario = async options => {
+      await this.model.sequelize.query(REGISTRAR_USUARIO, {
+        replacements: {
+          idUsuario: data.idUsuario,
+          cedula: data.cedula ?? null,
+          telefono: data.telefono ?? null,
+          correoEmail: data.correoEmail ?? null,
+          deviceId: data.deviceId?.trim() || null,
+          estado: data.estado ?? true
+        },
+        ...options
+      });
 
-    if (!data.deviceId) return this.model.create(values);
+      return await this.obtenerPorId(data.idUsuario, options);
+    };
 
-    values.deviceId = data.deviceId.trim();
+    if (!data.deviceId) return await registrarUsuario({});
+
     const lockName = `dev:${crypto
       .createHash("sha256")
       .update(data.deviceId.trim())
@@ -39,7 +58,7 @@ class UsuarioRepository extends IUsuarioRepository {
       const existing = await this.obtenerPorDeviceId(data.deviceId.trim(), {
         transaction
       });
-      const result = existing || await this.model.create(values, { transaction });
+      const result = existing || await registrarUsuario({ transaction });
 
       await this.model.sequelize.query("DO RELEASE_LOCK(:lockName)", {
         replacements: { lockName },
@@ -60,7 +79,7 @@ class UsuarioRepository extends IUsuarioRepository {
     }
   }
   async obtenerTodos() { return this.model.findAll(); }
-  async obtenerPorId(id) { return this.model.findByPk(id); }
+  async obtenerPorId(id, options = {}) { return this.model.findByPk(id, options); }
   async obtenerPorCorreo(correoEmail) { return this.model.findOne({ where: { correoEmail } }); }
   async obtenerPorDeviceId(deviceId, options = {}) {
     return this.model.findOne({

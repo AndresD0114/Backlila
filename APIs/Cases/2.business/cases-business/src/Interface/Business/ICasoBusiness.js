@@ -25,6 +25,8 @@ class ICasoBusiness {
   async eliminar(idCaso) {
      throw new Error("Debe implementar eliminar");
      }
+
+     
 }
 
 module.exports = ICasoBusiness;
