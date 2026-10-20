@@ -1,6 +1,5 @@
 const CASES_PATHS = Object.freeze([
   "/api/casos",
-  "/api/evidencias",
   "/api/responsables",
   "/api/tipos-acoso"
 ]);

@@ -3,8 +3,8 @@ const test = require("node:test");
 
 const { createApp } = require("../APIs/Cases/api/src/app");
 const { createContainer } = require("@lila/cases-infrastructure");
-const { CasoService, EvidenciaService } = require("@lila/cases-business");
-const { validarId } = require("../APIs/Cases/2.business/cases-business/src/helpers/validator");
+const { CasoService } = require("@lila/cases-business");
+const { validarId } = require("@lila/cases-helpers");
 
 const ID_CASO = "550e8400-e29b-41d4-a716-446655440000";
 
@@ -29,7 +29,6 @@ test("el contenedor conecta cada business con su repositorio", async () => {
 
   try {
     assert.equal(container.services.Caso.casoRepository, container.repositories.Caso);
-    assert.equal(container.services.Evidencia.evidenciaRepository, container.repositories.Evidencia);
     assert.equal(container.services.Responsable.responsableRepository, container.repositories.Responsable);
     assert.equal(container.services.TipoAcoso.tipoAcosoRepository, container.repositories.TipoAcoso);
     assert.equal(container.services.Usuario.usuarioRepository, container.repositories.Usuario);
@@ -38,9 +37,8 @@ test("el contenedor conecta cada business con su repositorio", async () => {
   }
 });
 
-test("HTTP comunica rutas, controladores, business y repositorios de Caso y Evidencia", async () => {
+test("HTTP comunica rutas, controlador, business y repositorio de Caso", async () => {
   let casoCreado;
-  let idCasoConsultadoPorEvidencia;
 
   const casoRepository = {
     async obtenerPorCodigo() { return null; },
@@ -58,22 +56,9 @@ test("HTTP comunica rutas, controladores, business y repositorios de Caso y Evid
     async eliminar() { return true; }
   };
 
-  const evidenciaRepository = {
-    async crear(evidencia) { return evidencia; },
-    async obtenerPorId(idEvidencia) { return { idEvidencia }; },
-    async obtenerPorCaso(idCaso) {
-      idCasoConsultadoPorEvidencia = idCaso;
-      return [{ idCaso }];
-    },
-    async obtenerTodos() { return []; },
-    async actualizar(idEvidencia, datos) { return { idEvidencia, ...datos }; },
-    async eliminar() { return true; }
-  };
-
   const app = createApp({
     services: {
       Caso: new CasoService(casoRepository),
-      Evidencia: new EvidenciaService(evidenciaRepository),
       Responsable: {},
       TipoAcoso: {},
       Usuario: {}
@@ -108,12 +93,11 @@ test("HTTP comunica rutas, controladores, business y repositorios de Caso y Evid
     assert.match(casoCreado.caso.codigoCaso, /^[a-f0-9]{64}$/);
     assert.match(crearBody.data.codigoCaso, /^#[A-Z]{2}-[A-Z0-9]{5}$/);
 
-    const evidenciaResponse = await fetch(`${baseUrl}/evidencias/caso/${ID_CASO}`);
+    const evidenciaResponse = await fetch(`${baseUrl}/evidencias`);
     const evidenciaBody = await evidenciaResponse.json();
 
-    assert.equal(evidenciaResponse.status, 200);
-    assert.equal(idCasoConsultadoPorEvidencia, ID_CASO);
-    assert.equal(evidenciaBody.data[0].idCaso, ID_CASO);
+    assert.equal(evidenciaResponse.status, 404);
+    assert.equal(evidenciaBody.error.code, "NOT_FOUND");
 
     const idInvalidoResponse = await fetch(`${baseUrl}/casos/id-invalido`);
     const idInvalidoBody = await idInvalidoResponse.json();

@@ -165,13 +165,11 @@ Contexto Sequelize
 Ejemplo:
 
 const repositories = {
-  Caso: new persistence.CasoRepository(context.Caso),
-  Evidencia: new persistence.EvidenciaRepository(context.Evidencia)
+  Caso: new persistence.CasoRepository(context.Caso)
 };
 
 const services = {
-  Caso: new business.CasoService(repositories.Caso),
-  Evidencia: new business.EvidenciaService(repositories.Evidencia)
+  Caso: new business.CasoService(repositories.Caso)
 };
 
 - En api/src/app.js, crea un objeto controllers explícito e inyecta cada servicio en su controlador.
@@ -238,8 +236,8 @@ En server.js:
 - Todas las validaciones de datos e identificadores deben estar en Business.
 - No coloques validaciones en las entidades de Models.
 - No distribuyas las mismas reglas entre rutas, controladores y modelos.
-- No crees ni conserves un archivo central validation.js.
-- Integra las validaciones en el archivo del servicio al que pertenecen.
+- Conserva en @lila/cases-helpers las validaciones transversales reutilizadas por varios servicios.
+- Integra en cada servicio las validaciones específicas de su recurso.
 - Al trasladar una validación, conserva su comportamiento y sus errores.
 - Las solicitudes inválidas deben rechazarse antes de llamar al repositorio.
 
@@ -247,7 +245,6 @@ Para el servicio de Casos, conserva estas reglas:
 
 - Los datos recibidos deben ser un objeto, no un arreglo.
 - Al crear un Caso, idUsuario e idTipoAcoso son obligatorios.
-- Al crear una Evidencia, idCaso es obligatorio.
 - Al crear un Responsable, nombre es obligatorio.
 - Los identificadores UUID deben validarse cuando corresponda.
 - idTipoAcoso debe representar un entero positivo.
@@ -304,7 +301,7 @@ APIs/
 - api/src/app.js debe publicar /openapi.json y /api-docs.
 - El Gateway debe documentar sus endpoints públicos.
 - En LILA, su título debe ser: LILA · API Gateway.
-- Agrupa las operaciones por recurso: Casos, Evidencias, Responsables, Tipos de acoso y Usuarios.
+- Agrupa las operaciones por recurso: Casos, Responsables, Tipos de acoso y Usuarios.
 - Documenta los parámetros de ruta y consulta.
 - Define requestBody para que Swagger permita introducir JSON en las operaciones que lo necesitan.
 - Utiliza ejemplos JSON pequeños y claros.

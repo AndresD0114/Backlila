@@ -1,7 +1,7 @@
 const { ValidationError } = require("@lila/errors");
 const { Responsable } = require("@lila/cases-models");
 const IResponsableBusiness = require("../Interface/Business/IResponsableBusiness");
-const { validarId } = require("../helpers/validator");
+const { validarId } = require("@lila/cases-helpers");
 
 
 function validarResponsable(data, parcial = false) {

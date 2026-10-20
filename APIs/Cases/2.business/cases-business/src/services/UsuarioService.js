@@ -2,7 +2,7 @@ const { ValidationError } = require("@lila/errors");
 const { Usuario } = require("@lila/cases-models");
 const IUsuarioBusiness = require("../Interface/Business/IUsuarioBusiness");
 const crypto = require("node:crypto");
-const { validarId } = require("../helpers/validator");
+const { validarId } = require("@lila/cases-helpers");
 
 function validarUsuario(data) {
   if (!data || typeof data !== "object" || Array.isArray(data)) {

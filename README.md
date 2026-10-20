@@ -20,6 +20,7 @@ APIs/
     4.persistence/cases-persistence/      @lila/cases-persistence
     5.models/cases-models/                @lila/cases-models
     6.infrastructure/cases-infrastructure/
+    7.helpers/cases-helpers/                @lila/cases-helpers
   Gateway/
     Controller/                           @lila/gateway-controller
     Model/                                @lila/gateway-model
@@ -74,7 +75,6 @@ los endpoints conservan el alcance de acceso del backend original.
 
 El cliente accede al gateway:
 - /api/casos
-- /api/evidencias
 - /api/responsables
 - /api/tipos-acoso
 - /api/usuarios

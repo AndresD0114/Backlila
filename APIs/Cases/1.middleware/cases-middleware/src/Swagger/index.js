@@ -7,7 +7,7 @@ function createSpec() {
       info: { 
         title: "LILA · Casos",
          version: "2.0.0", 
-         description: "Casos, evidencias, responsables, tipos de acoso y usuarios en transición." },
+         description: "Casos, responsables, tipos de acoso y usuarios en transición." },
           servers: [{ url: "/" }] },
     apis: [path.join(__dirname, "../Routers/*.js").replace(/\\/g, "/")]
   });

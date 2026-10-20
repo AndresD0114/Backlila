@@ -9,7 +9,7 @@ const {
 } = require("@lila/cases-models");
 const ICasoBusiness = require("../Interface/Business/ICasoBusiness");
 const crypto = require("crypto");
-const { esUuid, validarId } = require("../helpers/validator");
+const { esUuid, validarId } = require("@lila/cases-helpers");
 
 
 function validarCaso(data, parcial = false) {

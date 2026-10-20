@@ -42,15 +42,6 @@ const schemas = {
       }
     }
   },
-  Evidencia: {
-    type: "object",
-    required: ["idCaso"],
-    properties: {
-      idCaso: { type: "string", format: "uuid" },
-      tipoArchivo: { type: "string" },
-      urlArchivo: { type: "string" }
-    }
-  },
   Responsable: {
     type: "object",
     required: ["nombre"],
@@ -90,7 +81,6 @@ const examples = {
       tipoUsuario: "adulto"
     }
   },
-  Evidencia: { idCaso: "00000000-0000-0000-0000-000000000000", tipoArchivo: "imagen", urlArchivo: "https://example.com/file" },
   Responsable: { nombre: "Nombre", telefono: "3000000000", cargo: "Cargo", correoEmail: "correo@example.com" },
   Usuario: { cedula: "000000000", telefono: "3000000000", correoEmail: "correo@example.com", tipoUsuario: "usuario", deviceId: "device-id" }
 };
@@ -142,7 +132,6 @@ function createSpec() {
     tags: [
       { name: "Gateway" },
       { name: "Casos" },
-      { name: "Evidencias" },
       { name: "Responsables" },
       { name: "Tipos de acoso" },
       { name: "Usuarios" }
@@ -152,9 +141,6 @@ function createSpec() {
       "/api/casos": operations("Casos", "Registrar y consultar casos", [["get", "200"], ["post", "201", "Caso"]]),
       "/api/casos/{id}": operations("Casos", "Caso por ID", [["get", "200"], ["put", "200", "Caso"], ["delete", "200"]], [pathParameter("id", "ID")]),
       "/api/casos/codigo/{codigo}": operations("Casos", "Caso por código", [["get", "200"]], [pathParameter("codigo", "Código")]),
-      "/api/evidencias": operations("Evidencias", "Evidencias", [["get", "200"], ["post", "201", "Evidencia"]]),
-      "/api/evidencias/{id}": operations("Evidencias", "Evidencia por ID", [["get", "200"], ["put", "200", "Evidencia"], ["delete", "200"]], [pathParameter("id", "ID")]),
-      "/api/evidencias/caso/{idCaso}": operations("Evidencias", "Evidencias por caso", [["get", "200"]], [pathParameter("idCaso", "ID del caso")]),
       "/api/responsables": operations("Responsables", "Responsables", [["get", "200"], ["post", "201", "Responsable"]]),
       "/api/responsables/{id}": operations("Responsables", "Responsable por ID", [["get", "200"], ["put", "200", "Responsable"], ["delete", "200"]], [pathParameter("id", "ID")]),
       "/api/tipos-acoso": operations("Tipos de acoso", "Tipos de acoso", [["get", "200"]]),

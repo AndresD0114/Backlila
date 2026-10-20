@@ -10,7 +10,6 @@ function createContainer(config) {
       context.Caso,
       context.Usuario
     ),
-    Evidencia: new persistence.EvidenciaRepository(context.Evidencia),
     Responsable: new persistence.ResponsableRepository(context.Responsable),
     TipoAcoso: new persistence.TipoAcosoRepository(context.TipoAcoso),
     Usuario: new persistence.UsuarioRepository(context.Usuario)
@@ -18,7 +17,6 @@ function createContainer(config) {
 
   const services = {
     Caso: new business.CasoService(repositories.Caso),
-    Evidencia: new business.EvidenciaService(repositories.Evidencia),
     Responsable: new business.ResponsableService(repositories.Responsable),
     TipoAcoso: new business.TipoAcosoService(repositories.TipoAcoso),
     Usuario: new business.UsuarioService(repositories.Usuario)

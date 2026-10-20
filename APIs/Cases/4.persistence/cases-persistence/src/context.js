@@ -47,13 +47,6 @@ const Responsable = require("./models/Responsable")(sequelize);
 
 const Caso = require("./models/Caso")(sequelize);
 
-//=======================
-// Evidencia
-//=======================
-
-
-const Evidencia = require("./models/Evidencia")(sequelize);
-
 const InfoAfectado = require("./models/InfoAfectado")(sequelize);
 
 //========================
@@ -71,10 +64,6 @@ Caso.belongsTo(TipoAcoso, { foreignKey: "idTipoAcoso" });
 Responsable.hasMany(Caso, { foreignKey: "idResponsable" });
 Caso.belongsTo(Responsable, { foreignKey: "idResponsable" });
 
-// Caso -> Evidencia
-Caso.hasMany(Evidencia, { foreignKey: "idCaso" });
-Evidencia.belongsTo(Caso, { foreignKey: "idCaso" });
-
 Caso.hasOne(InfoAfectado, { foreignKey: "idCaso" });
 InfoAfectado.belongsTo(Caso, { foreignKey: "idCaso" });
 // =======================
@@ -87,7 +76,6 @@ return {
   TipoAcoso,
   Responsable,
   Caso,
-  Evidencia,
   InfoAfectado
 };
 }

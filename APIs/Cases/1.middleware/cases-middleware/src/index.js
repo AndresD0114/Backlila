@@ -6,7 +6,6 @@ module.exports = {
   createSpec: require("./Swagger").createSpec,
   Routers: {
     Caso: require("./Routers/CasoRoutes"),
-    Evidencia: require("./Routers/EvidenciaRoutes"),
     Responsable: require("./Routers/ResponsableRoutes"),
     TipoAcoso: require("./Routers/TipoAcosoRoutes"),
     Usuario: require("./Routers/UsuarioRoutes")
